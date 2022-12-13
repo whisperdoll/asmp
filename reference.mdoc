@@ -1,0 +1,541 @@
+::DB
+Define Byte(s)
+v8a
+-
+Sets the range of bytes starting at @#@ to $1.
+
+::DW
+Define Word
+v16
+-
+Sets the byte at @#@ to the lower 8 bits of $1, and sets the byte at @#@ to the higher 8 bits.
+
+::DS
+Define Storage
+v16
+-
+Reserves the next $1 bytes, causing the next instruction to be assembled at @# + $1@.
+
+::NOP
+No operation
+-
+-
+Does nothing - occupies one byte.
+
+::CMC
+Compliment Carry
+-
+C
+Compliments the carry bit, causing a 0 to turn into a 1 and vice-versa.
+
+::STC
+Set Carry
+-
+C
+Sets the carry bit to 1.
+
+::INR
+Increment Register or Memory
+reg
+ZSPX
+Increments the value of $1 by 1.
+
+::DCR
+Decrement Register or Memory
+reg
+ZSPX
+Decrements the value of $1 by 1.
+
+::CMA
+Complement Accumulator
+-
+-
+Compliments the accumulator value, settings all 0s to 1s and vice versa.
+
+::DMA
+Decimal Adjust Accumulator
+-
+ZSPCX
+Adjusts the accumulator for decimal calculations.
+
+::MOV
+Move Data
+reg,reg
+-
+Sets the value of the first $1 to the value of the second $2.
+Can be though of as <code>MOV <i>dest</i>,<i>src</i></code>
+
+::MVI
+Move Immediate Data
+reg,v8
+-
+-
+Sets the value of $1 to $2.
+
+::STAX
+Store Accumulator
+regpair/BD
+-
+Stores the value of <b>A</b> into memory at the address corresponding to the @value of $1@.
+
+::LDAX
+Load Accumulator
+regpair/BD
+-
+Stores the value in memory located at the address corresponding to the @value of $1@ to <b>A</b>.
+
+::ADD
+Add Register or Memory to Accumulator
+reg
+CSZPX
+Adds the value of $1 to <b>A</b>.
+
+::ADI
+Add Immediate To Accumulator
+v8
+CSZPX
+Adds $1 to <b>A</b>.
+
+::ADC
+Add Register or Memory to Accumulator With Carry
+reg
+CSZPX
+Adds the value of $1 and the value of the carry bit to <b>A</b>.
+
+::ACI
+Add Immediate to Accumulator With Carry
+v8
+CSZPX
+Adds $1 and the value of the carry bit to <b>A</b>.
+
+::SUB
+Subtract Register or Memory From Accumulator
+reg
+CSZPX
+Subtracts the value of $1 from <b>A</b>.
+
+::SUI
+Subtract Immediate From Accumulator
+v8
+CSZPX
+Subtracts $1 from <b>A</b>.
+
+::SBB
+Subtract Register or Memory From Accumulator With Borrow
+reg
+CSZPX
+Subtracts the value of $1 and the value of the carry bit from <b>A</b>.
+
+::SBI
+Subtract Immediate From Accumulator With Borrow
+v8
+CSZPX
+Subtracts $1 and the value of the carry bit from <b>A</b>.
+
+::ANA
+Logical AND Register or Memory With Accumulator
+reg
+CZSP
+ANDs the value of <b>A</b> by the value of $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::ANI
+Logical AND Immediate With Accumulator
+v8
+CZSP
+ANDs the value of <b>A</b> by $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::ORA
+Logical OR Register or Memory With Accumulator
+reg
+CZSP
+ORs the value of <b>A</b> by the value of $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::ORI
+Logical OR Immediate With Accumulator
+v8
+CZSP
+ORs the value of <b>A</b> by $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::XRA
+Logical XOR Register or Memory With Accumulator
+reg
+CZSPX
+XORs the value of <b>A</b> by the value of $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::XRI
+Logical XOR Immediate With Accumulator
+v8
+CZSPX
+XORs the value of <b>A</b> by $1 and stores the result to <b>A</b>.
+Sets the carry bit to 0.
+
+::CMP
+Compare Register or Memory With Accumulator
+reg
+CZSPX
+Behaves the same as SUB, internally subtracting the value of $1 from <b>A</b>, but no registers other than the Status Register are affected.
+Useful for testing for (in)equality using the status bits.
+
+::CPI
+Compare Immediate With Accumulator
+v8
+CZSPX
+Behaves the same as SBI, internally subtracting $1 from <b>A</b>, but no registers other than the Status Register are affected.
+Use for testing of (in)equality using the status bits.
+
+::RLC
+Rotate Accumulator Left
+-
+C
+Sets the carry bit to the highest bit of <b>A</b>, then rotates the bits of <b>A</b> left (setting the lowest bit to the highest bit).
+e.g. 10110110 becomes 01101101, setting the carry bit to 1.
+
+::RRC
+Rotate Accumulator Right
+-
+C
+Sets the carry bit to the lowest bit of <b>A</b>, then rotates the bits of <b>A</b> right (setting the highest bit to the lowest bit).
+e.g. 10110110 becomes 01011011, setting the carry bit to 0.
+
+::RAL
+Rotate Accumulator Left Through Carry
+-
+C
+Rotates the 9-bit number formed by prepending the carry bit to <b>A</b> left (setting the carry to the highest bit of <b>A</b>, and the lowest bit to the carry).
+e.g. If the carry bit is set to 1, 10110110 becomes 01101101, setting the carry bit to 1.
+
+::RAR
+Rotate Accumulator Right Through Carry
+-
+C
+Rotates the 9-bit number formed by prepending the carry bit to <b>A</b> right (setting the carry bit to the lowest bit of <b>A</b>, and the highest bit to the carry).
+e.g. If the carry bit is set to 1, 10110110 becomes 11011011, setting the carry bit to 0.
+
+::PUSH
+Push Data Onto Stack
+regpair/PSW
+-
+Pushes the 16-bit value of $1 onto the stack.
+
+::POP
+Pop Data Off Stack
+regpair/PSW
+-
+Pops a 16-bit value from the stack and sets the value of $1 to the popped value. PSW will affect the status bits.
+
+::LXI
+Load Register Pair Immediate
+regpair/SP,v16
+-
+Sets the value of $1 to $2.
+
+::DAD
+Double Add
+regpair/SP
+C
+Adds the value of $1 to the value of <b>HL</b>.
+
+::INX
+Increment Register Pair
+regpair/SP
+-
+Increments the value of $1 by 1.
+
+::DCX
+Decrement Register Pair
+regpair/SP
+-
+Decrements the value of $1 by 1.
+
+::XCHG
+Exchange Registers
+-
+-
+Swaps the values of <b>HL</b> and <b>DE</b>.
+
+::XTHL
+Exchange Stack
+-
+-
+Swaps the values of <b>HL</b> and the 16-bit value on top of the stack.
+
+::STA
+Store Accumulator Direct
+v16
+-
+Stores the value of <b>A</b> at @$1@.
+
+::LDA
+Load Accumulator Direct
+v16
+-
+Sets the value of <b>A</b> to value stored at memory address @$1@.
+
+::SHLD
+Store H and L Direct
+v16
+-
+Stores the value of <b>HL</b> to @$1@, little-endian style (lowest 8 bytes stored first).
+
+::LHLD
+Load H and L Direct
+v16
+-
+Sets the value of <b>HL</b> to the value stored at @$1@.
+
+::PCHL
+Load Program Counter from H and L
+-
+-
+Sets the value of <b>PC</b> to the value of <b>HL</b>, resuming program execution from @there@.
+
+::SPHL
+Load SP From H And L
+-
+-
+Sets the value of <b>SP</b> to the value of <b>HL</b>.
+
+;;ORG
+Origin
+v16
+-
+Sets the assembler's location to @$1@, resuming program assembly from there.
+
+::JMP
+Jump
+v16
+-
+Sets the value of <b>PC</b> to $1, resuming program execution from @there@.
+
+::JC
+Jump If Carry
+v16
+-
+Performs a JMP operation using @$1@ if the carry bit is set to 1.
+
+::JNC
+Jump If No Carry
+v16
+-
+Performs a JMP operation using @$1@ if the carry bit is set to 0.
+
+::JZ
+Jump If Zero
+v16
+-
+Performs a JMP operation using @$1@ if the zero bit is set to 1.
+
+::JNZ
+Jump If Not Zero
+v16
+-
+Performs a JMP operation using @$1@ if the zero bit is set to 0.
+
+::JM
+Jump If Minus
+v16
+-
+Performs a JMP operation using @$1@ if the sign bit is set to 1.
+
+::JP
+Jump If Positive
+v16
+-
+Performs a JMP operation using @$1@ if the sign bit is set to 0.
+
+::JPE
+Jump If Parity Even
+v16
+-
+Performs a JMP operation using @$1@ if the parity bit is set to 1 (even parity).
+
+::JPO
+Jump If Parity Odd
+v16
+-
+Performs a JMP operation using @$1@ if the parity bit is set to 0 (odd parity).
+
+::CALL
+Call
+v16
+-
+Calls the subroutine at @$1@, pushing the current value of <b>PC</b> to the stack and thus expecting a RET statement to resume execution from.
+
+::RST
+Restart
+v3
+-
+Performs a CALL operation to the address formed by bit-shifting $1 left by 3.
+Using value 101B, for example, performs a CALL operation at @0000 0000 0010 1000@.
+Usually used with IO Devices.
+
+::CC
+Call If Carry
+v16
+-
+Performs a CALL operation using @$1@ if the carry bit is set to 1.
+
+::CNC
+Call If Not Carry
+v16
+-
+Performs a CALL operation using @$1@ if the carry bit is set to 0.
+
+::CZ
+Call If Zero
+v16
+-
+Performs a CALL operation using @$1@ if the zero bit is set to 1.
+
+::CNZ
+Call If Not Zero
+v16
+-
+Performs a CALL operation using @$1@ if the zero bit is set to 0.
+
+::CM
+Call If Minus
+v16
+-
+Performs a CALL operation using @$1@ if the sign bit is set to 1.
+
+::CP
+Call If Positive
+v16
+-
+Performs a CALL operation using @$1@ if the sign bit is set to 0.
+
+::CPE
+Call If Parity Even
+v16
+-
+Performs a CALL operation using @$1@ if the parity bit is set to 1 (even parity).
+
+::CPO
+Call If Parity Odd
+v16
+-
+Performs a CALL operation using @$1@ if the parity bit is set to 0 (odd parity).
+
+::HLT
+Halt
+-
+-
+Halts the CPU and waits for an interrupt from an IO device. Useful for waiting for inputs before computing anything. Interrupts must be enabled for this to be useful.
+
+::RET
+Return
+-
+-
+Sets the value of <b>PC</b> to a value popped from the stack, resuming execution from there.
+Usually for use with CALL operations.
+
+::RC
+Return If Carry
+-
+-
+Performs a RET operation if the carry bit is set to 1.
+
+::RNC
+Return If Not Carry
+-
+-
+Performs a RET operation if the carry bit is set to 0.
+
+::RZ
+Return If Zero
+-
+-
+Performs a RET operation if the zero bit is set to 1.
+
+::RNZ
+Return If Not Zero
+-
+-
+Performs a RET operation if the zero bit is set to 0.
+
+::RM
+Return If Minus
+-
+-
+Performs a RET operation if the sign bit is set to 1.
+
+::RP
+Return If Positive
+-
+-
+Performs a RET operation if the sign bit is set to 0.
+
+::RPE
+Return If Parity Even
+-
+-
+Performs a RET operation if the parity bit is set to 1 (even parity).
+
+::RPO
+Return If Parity Odd
+-
+-
+Performs a RET operation if the parity bit is set to 0 (odd parity).
+
+::EI
+Enable Interrupts
+-
+-
+Enables IO device interrupts.
+
+::DI
+Disable Interrupts
+-
+-
+Disables IO device interrupts.
+
+::IN
+Input
+v8
+-
+Sets the value of <b>A</b> to the value read from the device specified from $1.
+
+::OUT
+Output
+v8
+-
+Sends the value of <b>A</b> to the device specified by $1.
+
+;;EQU
+Equate
+v16
+-
+Defines # to be equal to $1. # can subsequently be used as a variable for instructions that take values as arguments. These labels can NOT be redefined.
+
+;;SET
+Set
+v16
+-
+Defines # to be equal to $1. # can subsequently be used as a variable for instructions that take values as arguments. These labels CAN be redefined.
+Note: This instruction is used internally for registers A, B, C, D, E, H, L, and M, to set them to values 7, 0, 1, 2, 3, 4, 5, and 6 respectively.
+
+;;IF
+If
+v16
+-
+Evaluates $1, and only assembles the following statements leading up to a required ENDIF if $1 is not equal to 0.
+
+;;ENDIF
+End If
+-
+-
+Used to terminate the body of an IF statement.
+
+;;END
+End Of Assembly
+-
+-
+Tells the assembler that assembly is done, and the location of this instruction will be the physical end of the program.
+This should be the very last command in code, as any instructions located farther in memory won't be reachable.
+If no END statement is included, it will be internally appended to code at assembly time.

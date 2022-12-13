@@ -1,0 +1,907 @@
+body, html {
+  padding:0;
+  margin:0;
+  font-family: Courier New, monospace;
+  background-size:cover;
+  overflow:hidden;
+}
+
+code, .ref-usage {
+  border:1px solid #aaa;
+  border-radius:4px;
+  background:#fefefe;
+  padding:2px 4px;
+  display:inline-block;
+  color: #111;
+}
+
+.clickable-op {
+  cursor:pointer;
+  border-color:#25a;
+  display:inline;
+}
+
+.clickable-op:hover {
+  font-size:16px;
+}
+
+#container {
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  /*background:#33AAFF;*/
+  background:rgba(51,170,255,0.4);
+  
+  background-color:rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+
+.myAwesomeTable {
+  border-collapse:collapse;
+}
+
+.myAwesomeTable th {
+  background:white;
+  border:1px solid black;
+  padding:4px;
+}
+
+.myAwesomeTable td {
+  border:1px solid #00a;
+  padding:4px;
+  text-align:center;
+}
+
+.challengeListContainerWidget {
+  /*background:#33AAFF;*/
+  background-color:rgba(0,0,0,0.8);
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  padding:16px;
+  box-sizing:border-box;
+}
+
+.challengeListContainerWidget-container {
+  background:transparent;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  top:48px;
+}
+
+.challengeListContainerWidget-selector {
+  background:rgba(255,255,255,0.5);
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  height:48px;
+  line-height:48px;
+  box-sizing:border-box;
+}
+
+.challengeListContainerWidget-selector-button {
+  background:rgba(255,255,255,0.5);
+  height:100%;
+  display:inline-block;
+  padding:0 16px;
+  cursor:pointer;
+}
+
+.challengeListContainerWidget-selector-button:hover {
+  background:rgba(255,255,255,0.7);
+}
+
+.challengeListContainerWidget-selector .active {
+  background:white;
+}
+
+.challengeListWidget {
+  width:100%;
+  height:100%;
+  padding:16px;
+  box-sizing:border-box;
+}
+
+.challengeListWidget-header {
+  font-size:48px;
+  font-weight:bold;
+  position:absolute;
+  right:16px;
+  /*top:-42px;*/
+  bottom:8px;
+  text-shadow:
+    -1px -1px 0 #ddd,
+    1px -1px 0 #ddd,
+    -1px 1px 0 #ddd,
+    1px 1px 0 #ddd; 
+}
+
+#fade {
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.8);
+  z-index:1000;
+}
+
+#tutorialText {
+  position:absolute;
+  z-index:1002;
+  background:white;
+  padding:12px;
+  border-radius:7px;
+  border: 1px solid #aaa;
+}
+
+.tutorialButtonContainer, .diffWidget-buttons > button, .settingsWidget-buttons > button {
+  color:#5599CC;
+  font-size:18px;
+  text-align:right;
+  margin-top:8px;
+  margin-right:8px;
+  font-family:sans-serif;
+  font-weight:bold;
+  cursor:pointer;
+  background:transparent;
+  border:0;
+  color:#5599CC;
+}
+
+.tutorialNext {
+  cursor:pointer;
+}
+
+.tutorialSkip {
+  color:#CC5555;
+  float:left;
+}
+
+.refs-small-container {
+  position:absolute;
+  left:50%;
+  top:calc(50% - 64px);
+  transform:translate(-50%, -50%);
+  border:1px solid #aaa;
+  background:white;
+  border-radius:4px;
+}
+
+.refs-small-openLink {
+  border:0;
+  background:transparent;
+  color:blue;
+  border-bottom:1px solid blue;
+  display:block;
+  cursor:pointer;
+  padding:0 0;
+  margin:0 8px;
+  margin-bottom:8px;
+  margin-left:auto;
+}
+
+.refs-container {
+  position:absolute;
+  left:0;
+  right:0;
+  top:32px;
+  bottom:0;
+  background:#ccc;
+  padding:0;
+  box-sizing:border-box;
+  overflow:auto;
+  padding-top:0;
+}
+
+.refs-search {
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  font-size:16px;
+  padding:0 8px;
+  margin:0;
+  box-sizing:border-box;
+  z-index:10;
+  height:32px;
+}
+
+.ref-widget-close, .ref-widget-openNew {
+  position:sticky;
+  right:16px;
+  top:8px;
+  transform:translate(30%, -0%);
+  z-index:11;
+  background-color:#FF3333;
+  border:1px solid #a44;
+  border-radius:50px;
+  width:32px;
+  height:32px;
+  cursor:pointer;
+  font-family:Helvetica, sans-serif;
+  color:white;
+  margin:-64px -40px;
+  background-image: url("../img/icons/close.png");
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ref-widget-openNew {
+  background-image: url("../img/icons/open.png");
+}
+
+.ref-widget-openNew {
+  right:16px;
+  background-color:#5555ff;
+  border:1px solid #11d;
+}
+
+.ref-widget-openNew:hover {
+  background-color:#6666ff;
+}
+
+.ref-widget-close:hover {
+  background-color:#FF5555;
+}
+
+.ref-widget-close:active {
+  background:#FF0000;
+}
+
+.refs-container > .ref-container:last-of-type {
+  margin-bottom:0;
+}
+
+.refs-container > .ref-container {
+  float:left;
+  width:50%;
+  min-height:240px;
+  margin:0;
+  border-radius:0;
+  background:#fafafa;
+}
+
+.ref-desc {
+  margin-top:8px;
+  font-family:Helvetica;
+  font-size:16px;
+  margin-bottom:-16px;
+}
+
+.ref-container {
+  position:relative;
+  background:white;
+  color:black;
+  border:1px solid #aaa;
+  border-radius:5px;
+  padding:8px;
+  display:inline-block;
+  margin:8px 8px;
+  box-sizing:border-box;
+  min-width:300px;
+  height:auto;
+}
+
+.ref-header {
+  font-size:24px;
+  font-weight:bold;
+}
+
+.ref-status {
+  font-size:14px;
+  margin-top:8px;
+}
+
+.ref-usage {
+  display:inline-block;
+  background:#f1f1f1;
+  font-size:15px;
+  margin-top:2px;
+}
+
+.ref-usage-label:after {
+  content:" ";
+}
+
+.ref-usage-op:after {
+  content:" ";
+}
+
+.ref-desc-address:before {
+  content:"[";
+}
+
+.ref-desc-address:after {
+  content:"]";
+}
+
+.ref-desc-address {
+  color:#0000FF;
+  font-family:monospace;
+}
+
+.ref-usage-arg {
+  font-style:italic;
+  background:#ddd;
+  padding-left:1px;
+  padding-right:3px;
+  border-bottom:1px dotted black;
+  font-family:monospace;
+}
+
+.ref-usage-arg-tooltip {
+  position:absolute;
+  background:#ffffee;
+  border:1px solid #aaa;
+  padding:2px 4px;
+}
+
+.ref-desc-label {
+  font-family:monospace;
+}
+
+.diffWidget, .ref-widget, .ref-small-widget, .settingsWidget {
+  position:absolute;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  z-index:10000;
+  background:rgba(0,0,0,0.7);
+}
+
+.settingsWidget-inner-header {
+  font-size:24px;
+  margin-bottom:12px;
+  font-weight:bold;
+}
+
+.setting-label {
+  width:150px;
+}
+
+.settingsWidget-inner-settings > div > * {
+  display:inline-block
+}
+
+.diffWidget-itemContainer > .device {
+  position:relative !important;
+}
+
+.diffWidget-header {
+  font-size: 32px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.diffWidget-buttons-challenges,.settingsWidget-buttons-save {
+  float: right;
+}
+
+.diffWidget-buttons-back, .settingsWidget-buttons-back {
+  float: left;
+}
+
+.ref-focused {
+  border-color:gold;
+  background:#FFFFDD;
+}
+
+.diffWidget-itemContainer > .registerContainer {
+}
+
+.diffWidget-itemsContainer, .settingsWidget-inner {
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50% ,-50%);
+  background:white;
+  white-space:nowrap;
+  border:4px solid white;
+  border-radius:9px;
+  padding:4px;
+}
+
+.diffWidget-itemContainer {
+  position:relative;
+  display:inline-block;
+  padding:8px;
+  vertical-align:top;
+}
+
+.header {
+  text-align:center;
+  font-size:32px;
+  background:rgba(255,255,255,0.5);
+}
+
+.challenge {
+  float:left;
+  padding:24px;
+  font-size:24px;
+  border:2px solid #880000;
+  color:#880000;
+  background:rgba(255,255,255,0.78);
+  font-family:monospace;
+  cursor:pointer;
+  margin-right:24px;
+  margin-bottom:24px;
+  position:relative;
+}
+
+.complete {
+  border:2px solid #008800;
+  color:#004400;
+}
+
+.complete:hover {
+  background:#008800 !important;
+  color:white;
+}
+
+.complete:active {
+  background:#005500 !important;
+  border-color:#005500 !important;
+  color:#ddd !important;
+}
+
+.new {
+  position:absolute;
+  top:0;
+  right:0;
+  color:black;
+  text-shadow:1px 1px white;
+  padding:2px 4px;
+  font-size:16px;
+}
+
+.challenge:hover {
+  /*background:rgba(255,255,255,0.8);*/
+  background:#880000;
+  color:white;
+}
+
+.challenge:active {
+  /*background:rgba(0,0,0,0.2);*/
+  background:#550000;
+  border-color:#550000;
+  color:#ddd;
+}
+
+#gameContainer {
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:100%;
+  overflow: hidden;
+}
+
+.panelWidget {
+  position:relative;
+  height:100%;
+  float:left;
+}
+
+#panelWidget-1 {
+  width:64px;
+  background: #111;
+  overflow:hidden;
+}
+
+#panelWidget-1 > #buttonContainer {
+  width:81px;
+  height:100%;
+  overflow-y:scroll;
+}
+
+#panelWidget-2 {
+  width:315px;
+  display:flex;
+  flex-flow:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+#panelWidget-2 > * {
+  flex:0 1 auto;
+}
+
+#panelWidget-3 {
+  width:500px;
+}
+
+#panelWidget-4 {
+  width:calc(100% - 864px - 15px);
+  display:flex;
+  flex-flow:column;
+}
+
+#panelWidget-4 > * {
+  flex:0 1 auto;
+}
+
+#challengeText {
+  background:#99d5ff;
+  background:rgba(0,0,0,0.7);
+  color:white;
+  position:relative;
+  flex:1 1 auto !important;
+  box-sizing:border-box;
+  border:0px solid #25A;
+  border-radius:0px;
+  padding:8px 12px;
+  overflow:auto;
+  font-family:Helvetica, sans-serif;
+}
+
+.inputContainer {
+  width:100%;
+  height:100%;
+  background:transparent;
+  position: relative;
+}
+
+.input, .lineNumbers {
+  width:calc(100% - 50px);
+  height:500px;
+  background:rgba(255,255,255,1);
+  border:0px solid #aaa;
+  color:black;
+  border-radius:1px;
+  position:absolute;
+  left:50px;
+  top:0;
+  height:100%;
+  box-sizing:border-box;
+  font-size:14px;
+  margin:0;
+  padding:4px 8px;
+  resize:none;
+  white-space:pre;
+  overflow:auto;
+}
+
+.lineNumbers {
+  left:0;
+  width:50px;
+  background:#fff;
+  overflow:hidden;
+  text-align:right;
+  border:1px solid #aaa;
+  border-top:0;
+  border-bottom:0;
+  background:#eee;
+  color:#444;
+}
+
+.lineNumbers-hilite {
+  color:blue;
+}
+
+.lineNumbers-hilite:before {
+  content:"▶";
+  font-size:11px;
+}
+
+.lineNumbers-lineNumber {
+  display:inline-block;
+}
+
+.lineNumbers-lineNumber:last-of-type {
+  margin-bottom:4px;
+}
+
+#buttonContainer {
+  width:100%;
+  position: relative;
+}
+
+#buttonContainer > button {
+  width:100%;
+  background:#222;
+  color:white;
+  height:64px;
+  border:0;
+  cursor:pointer;
+  position: relative;
+}
+
+#test {
+  
+}
+
+#buttonContainer > button:hover {
+  background:#444;
+}
+
+#buttonContainer > button:active {
+  background:#4499CC;
+}
+
+.statusBitsWidget {
+  border:1px solid #aaaaaa;
+  padding:4px;
+  border-radius:3px;
+}
+
+.stackWidget {
+  position:relative;
+  background:#eee;
+  width:100%;
+  height:200px;
+  overflow-y:auto;
+  flex:1 1 auto !important;
+  min-height:200px;
+}
+
+.stackWidget-header, .memoryWidget-header, .registerContainer-header, .statusWidget-header {
+  position:relative;
+  left:0;
+  top:0;
+  width:100%;
+  height:28px;
+  line-height:28px;
+  background:#ddd;
+  border-bottom:1px solid #aaa;
+  padding-left:8px;
+  box-sizing:border-box;
+  font-size:16px;
+}
+
+.statusWidget-inner {
+  position:relative;
+  background:#eee;
+  padding:4px;
+}
+
+.stackWidget-inner {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  max-height:100%;
+  overflow-y:auto;
+}
+
+.stackWidget-inner-value {
+  display:inline-block;
+  border-top:1px solid #aaa;
+  width:100%;
+  padding:4px;
+  box-sizing:border-box;
+  background:#eee;
+}
+
+.memorySeekWidget {
+  background:black;
+  width:100%;
+  border:1px solid #aaa;
+  border-left:0;
+  border-right:0;
+}
+
+.memorySeekWidget-input {
+  width:calc(100% - 40px);
+  margin:0;
+  box-sizing:border-box;
+  background: white;
+  border: 1px solid #aaa;
+  height: 100%;
+  color: black;
+}
+
+.memorySeekWidget-button {
+  width:40px;
+  box-sizing:border-box;
+  background: white;
+  border: 1px solid #aaa;
+  height: 100%;
+  color: #111;
+  cursor: pointer;
+}
+
+.memoryWidget {
+  position:relative;
+  width:100%;
+  background:#eee;
+  color:black;
+  box-sizing:border-box;
+  font-size:15.5px;
+}
+
+.memoryWidget-inner {
+  position:relative;
+  padding:4px 4px;
+}
+
+#panelWidget-2 > .memoryWidget {
+  border-top:1px solid #aaa;
+}
+
+.memoryWidget-memory {
+  position:relative;
+  left:26px;
+}
+
+.memoryWidget-shallow {
+  position:relative;
+  width:auto;
+  height:auto;
+  top:unset;
+  left:unset;
+  right:unset;
+  bottom:unset;
+  border:1px solid #aaa;
+  padding:4px;
+}
+
+.memoryWidget-memory-shallow {
+  position:relative;
+  width:auto;
+  height:auto;
+  top:unset;
+  left:unset;
+  right:unset;
+  bottom:unset;
+}
+
+.memoryWidget-pageButton {
+  position:absolute;
+  left:0;
+  padding:0px 8px;
+  height:50%;
+  cursor:pointer;
+  background:transparent;
+  color:#333;
+  border:0;
+}
+
+.memoryWidget-pageButton:hover {
+  color:black;
+}
+
+.memoryWidget-pageUp {
+  top:0;
+  border-bottom:1px solid #aaa;
+  box-sizing:content-box;
+  z-index:1;
+}
+
+.memoryWidget-pageDown {
+  bottom:0;
+}
+
+.fadedText {
+  color:#333;
+  display:inline;
+}
+
+.fadedText > .activeBit, .activeBit > .fadedText {
+  background:#ffff00;
+  color:black;
+  box-sizing:border-box;
+  display:inline;
+}
+
+.console {
+  width:100%;
+  background:black;
+  color:white;
+  overflow-y:auto;
+  padding:8px;
+  box-sizing:border-box;
+  flex:0 1 200px !important;
+}
+
+.console-msg {
+}
+
+.console-msg:last-of-type, #challengeText > div {
+  padding-bottom:8px;
+}
+
+.console-err {
+  color:#FF7777;
+  font-weight:bold;
+}
+
+.console-warning {
+  color:#FFFF00;
+}
+
+.consoleLink {
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+#registerContainer-main {
+  width:100%;
+  border-radius:0;
+  border-width:0px;
+}
+
+#registerContainer-main > div {
+}
+
+.registerContainer {
+  width:300px;
+  border:6px solid #25A;
+  border-radius:7px;
+  box-sizing:border-box;
+  font-size:20px;
+}
+
+.registerContainer-inner {
+  position:relative;
+}
+
+.registerWidget-displayMenu {
+  display:block;
+  position:absolute;
+  z-index:100;
+  background:white;
+  border:1px solid #aaa;
+  font-size:20px;
+}
+
+.registerWidget-displayMenu-item {
+  cursor:pointer;
+  padding:8px;
+}
+
+.registerWidget-displayMenu-item:hover {
+  background:#ddd;
+}
+
+.registerWidget {
+  background:#FFAAFF;
+  text-align:left;
+  width:100%;
+  box-sizing:border-box;
+  padding:1px 0;
+  padding-left:8px;
+}
+
+.registerWidget-A,
+.registerWidget-B,
+.registerWidget-C,
+.registerWidget-D,
+.registerWidget-E,
+.registerWidget-H,
+.registerWidget-L {
+  background:#eee;
+}
+
+.registerWidget-BC,
+.registerWidget-DE,
+.registerWidget-HL,
+.registerWidget-PSW {
+  background:#AAFFCC;
+}
+
+.registerWidget-M {
+  background:#FFFFAA;
+}
+
+.registerWidget-header {
+  display:inline-block;
+  cursor:pointer;
+  width:52px;
+}
+
+.registerWidget-header:after {
+  content:":";
+}
+
+.registerWidget-value {
+  display:inline;
+}

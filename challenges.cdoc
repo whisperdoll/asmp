@@ -1,0 +1,797 @@
+`name: sandbox
+`title: Sandbox
+`category: bootcamp
+`requires: 
+`unlocks: sandbox
+`tests: 1
+`registers: all
+`desc: :)
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+
+}
+`test: function(oldBlob, newBlob) {
+    return true;
+}
+`getExpected: function(oldBlob) {
+
+}
+`diff: function() {}
+```
+`name: tutorial
+`title: Tutorial
+`category: bootcamp
+`requires: 
+`unlocks: tutorial,adi
+`registers: A
+`tests: 256
+`desc: Add 5 to the value of <b>A</b>.
+
+Instructions in assembly follow the following format:
+
+<code>label: instruction arg1,arg2</code>
+
+where <code>label</code> is an optional label referring to the memory address of the instruction (not needed here),
+and <code>instruction</code> is the "function" being called, both being case-insensitive. Notice that there are no tokens for ending statements such as semicolons; Instructions only take up one line, and are run line-by-line
+
+Some instructions require parameters, which may be numbers, expressions, or register references, depending on the instruction.
+
+To complete this challenge, use the instruction <op>adi</op> <--(click to see usage).
+
+When you think you've found the solution, click <b>Test</b>.
+`invoke: function() {
+    doTutorial();
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+}
+`test: function(oldBlob, newBlob) {
+    return oldBlob.registers.A.plus(5).value === newBlob.registers.A.value;
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: oldBlob.registers.A.plus(5)
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: add
+`title: Add Register
+`category: bootcamp
+`requires: tutorial
+`unlocks: add
+`tests: 256 * 256
+`registers: A,B
+`desc: Subtract 1 from the value of <b>B</b>, then add that value to the value of <b>A</b>.
+
+For many instructions, there exist two versions - one that operates using an explicit value (like <op>adi</op>), and one that operates using a register's value.
+
+For this challenge, you will use the version of <op>adi</op> that takes a register as an argument instead of a value, and uses that register's value to add to <b>A</b>: <op>add</op>
+
+There also exist subtraction instructions <op>sui</op> and <op>sub</op> that mirror these.
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i / 256;
+    processor.registers.B.value = i & (255);
+}
+`test: function(oldBlob, newBlob) {
+    return newBlob.registers.A.equals(oldBlob.registers.A.plus(oldBlob.registers.B.minus(1)));
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: oldBlob.registers.A.plus(oldBlob.registers.B.minus(1))
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: expressions
+`title: Expressions
+`category: bootcamp
+`requires: tutorial
+`unlocks: expressions
+`tests: 256
+`registers: A
+`desc: Add <code>8 + 7 / 3 * 16 mod 3</code> to the value of <b>A</b>.
+
+Instead of explicit numbers, it is permitted to use mathematical expressions to pass a value.
+
+Mathematical expressions may include the following operators:
+<code>+</code> - addition - produces the sum of two numbers
+<code>-</code> - subtraction, negation - produces the difference of two numbers or negates one number
+<code>*</code> - multiplication - produces the product of two numbers
+<code>/</code> - integer division - produces the quotient of two numbers rounded down
+<code>MOD</code> - modulo - produces the remainder of dividing two numbers
+<code>NOT</code> - logical NOT - produces the bit compliment of one number
+<code>AND</code> - logical AND - produces the bit-by-bit logical AND of two numbers
+<code>OR</code> - logical OR - produces the bit-by-bit logical OR of two numbers
+<code>XOR</code> - logical XOR - produces the bit-by-bit logical XOR of two numbers
+<code>SHR</code> - bit shift right - produces the value of the first operand bit-shifted right a number of times equal to the second operand
+<code>SHL</code> - bit shift left - produces the value of the first operand bit-shifted left a number of times equal to the second operand
+<code>()</code> - parentheses - indicates a sub-expression is to be evaluated first
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+}
+`test: function(oldBlob, newBlob) {
+    return newBlob.registers.A.equals(oldBlob.registers.A.plus(8 + parseInt(7 / 3) * 16 % 3));
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: oldBlob.registers.A.plus(8 + parseInt(7 / 3) * 16 % 3)
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: memcpy
+`title: Copying Memory
+`category: computer
+`requires: tutorial
+`unlocks: memcpy
+`tests: 100
+`registers: all
+`desc: Copy 64 bytes of memory starting at the address stored in <b>HL</b> to the address 100 bytes later (<b>HL</b> + 100).
+`invoke: function() {}
+`setup: function(processor, i) {
+    this.root = int8.random().toInt16().plus(1000);
+    this.newRoot = this.root.plus(100);
+    processor.registers.HL.value = this.root.value;
+    for (var i = 0; i < 64; i++) {
+        processor.memory.setByte(this.root.plus(i), int8.randomNonZero());
+    }
+}
+`test: function(oldBlob, newBlob) {
+    var om = oldBlob.memoryBlob;
+    var nm = newBlob.memoryBlob;
+
+    //console.log(om, nm);
+    
+    for (var i = 0; i < 64; i++) {
+        if (coerceInt(om[i + this.root.value]) !== coerceInt(nm[i + this.newRoot.value])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+`getExpected: function(oldBlob) {
+    var c = oldBlob.memoryBlob;
+    var ret = {
+        memoryBlob: []
+    };
+    
+    for (var i = 0; i < 64; i++) {
+        ret.memoryBlob[i + this.newRoot.value] = c[i + this.root.value];
+    }
+
+    return ret;
+}
+`diff: Challenge.memDiff
+```
+`name: addsub
+`title: Addition and Subtraction
+`category: bootcamp
+`requires: add
+`unlocks: addsub
+`tests: 10000
+`registers: A,B,C,D
+`desc: Set the value of <b>A</b> to equal: <b>A</b> + <b>B</b> - <b>D</b> - 1 + <b>C</b> + 80
+
+Useful instructions: <op>inr</op> <op>dcr</op> <op>add</op> <op>sub</op> <op>adi</op> <op>sui</op>
+`invoke: function() {}
+`setup: function(processor, i) {
+    processor.registers.A.value = ~~(Math.random() * 256);
+    processor.registers.B.value = ~~(Math.random() * 256);
+    processor.registers.C.value = ~~(Math.random() * 256);
+    processor.registers.D.value = ~~(Math.random() * 256);
+}
+`test: function(oldBlob, newBlob) {
+    var or = oldBlob.registers;
+    return newBlob.registers.A.equals(or.A.value + or.B.value - or.D.value - 1 + or.C.value + 80);
+}
+`getExpected: function(oldBlob) {
+    var or = oldBlob.registers;
+    var ret = {
+        registers: {
+            A: new int8(or.A.value + or.B.value - or.D.value - 1 + or.C.value + 80)
+        }
+    };
+
+    return ret; 
+}
+`diff: Challenge.regDiff
+```
+`name: devices
+`title: I/O Devices
+`category: bootcamp
+`requires: addsub
+`unlocks: iodevices
+`tests: 1000
+`registers: A,B
+`desc: Accept two inputs from the device (device 0) and send the device their sum.
+
+Many assembly projects have to do with interfacing with certain devices, receiving input and sending output.
+
+This is accomplished through the <op>in</op> and <op>out</op> instructions.
+`invoke: function() {
+    var d = new IO_SumRequester(processor);
+    setDevice(d);
+    processor.setDevice(0, d);
+}
+`setup: function(processor, i) {
+    currentDevice.reset();
+}
+`test: function(oldBlob, newBlob) {
+    return currentDevice.lastReceived && currentDevice.lastReceived.value === (currentDevice.bytesToSend.reduce((l, r) => l.value + r.value) & 0xff);
+}
+`getExpected: function(oldBlob) {
+    return {
+        sum: currentDevice.bytesToSend.reduce((l, r) => l.value + r.value)
+    };
+}
+`diff: function(diffWidget, oldBlob, expectedBlob) {
+    var d = new IO_SumRequester(processor);
+    d.$inner.innerText = currentDevice.bytesToSend.map(i8 => i8.toDecString()).join(" ");
+    d.$sum.innerText = "Sum: " + expectedBlob.sum;
+
+    diffWidget.appendWidget("Expected Device", new WrapperWidget(d.$element));
+    diffWidget.appendWidget("Your Device", new WrapperWidget(currentDevice.$element.cloneNode(true)));
+}
+```
+`name: bitwise
+`title: Bitwise Operations
+`category: bootcamp
+`requires: add
+`unlocks: bitwise
+`tests: 10000
+`registers: A,B,C
+`desc: Set the value of <b>A</b> to <code><b>A</b> & <b>B</b> | <b>C</b> ^ 255</code>. You can assume all 3 registers will hold random values.
+
+Like the addition and subtraction instructions, there exist instructions that perform logical bitwise operations AND, OR, and XOR using either an explicit value/expression or a register.
+
+These operations are as follows:
+
+<table class="myAwesomeTable"><tr><th>Operation</th><th>Immediate Value</th><th>Register Value</th></tr><tr><td>AND</td><td><op>ANI</op></td><td><op>ANA</op></td></tr><tr><td>OR</td><td><op>ORI</op></td><td><op>ORA</op></td></tr><tr><td>XOR</td><td><op>XRI</op></td><td><op>XRA</op></td></tr></table>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = ~~(Math.random() * 256);
+    processor.registers.B.value = ~~(Math.random() * 256);
+    processor.registers.C.value = ~~(Math.random() * 256);
+}
+`test: function(oldBlob, newBlob) {
+    var or = oldBlob.registers;
+    return newBlob.registers.A.equals(or.A.and(or.B).or(or.C).xor(255));
+}
+`getExpected: function(oldBlob) {
+    var or = oldBlob.registers;
+    return {
+        registers: {
+            A: or.A.and(or.B).or(or.C).xor(255)
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: carry
+`title: Carry Bit
+`category: bootcamp
+`requires: addsub
+`unlocks: carryBit
+`tests: 256
+`registers: A,S
+`desc: Set the Carry Bit to 1 if the value of <b>A</b> is less than 200, and set it to 0 otherwise. You may assume the Carry Bit is initially set to 0.
+
+The Carry Bit is bit 0 (least significant) of the Status Register <b>S</b>, and is set according to the result of the previous operation.
+
+There are two instructions that operate directly on the Carry Bit, which are <op>stc</op> and <op>cmc</op>.
+
+Addition operations will set the carry bit to 1 if an overflow occurs (the value of the register being operated upon exceeds 0xFF and wraps back around).
+If no overflow occurs, the Carry Bit will be set to 0.
+
+e.g. Adding 200 to a register holding a value of 100 will set that register's value to (100 + 200) mod 256 = 44, and will set the Carry Bit to 1.
+
+Addition operations that affect the carry bit: <op>add</op> <op>adi</op> <op>adc</op> <op>aci</op> <op>dad</op>
+
+Subtraction operations will set the carry bit if an underflow occurs (the value of the register being operated upon goes below 0x00 and wraps around).
+If no underflow occurs, the Carry Bit will be set to 0.
+
+e.g. Subtracting 200 from a register holding a value of 100 will set that register's value to (100 - 200) mod 256 = 156, and will set the Carry Bit to 1.
+
+Subtraction operations that affect the carry bit: <op>sub</op> <op>sui</op> <op>sbb</op> <op>sbi</op> 
+
+The Rotate instructions affect the Carry Bit in their own unique ways as well.
+
+Rotate instructions: <op>rlc</op> <op>rrc</op> <op>ral</op> <op>rar</op>
+
+Operations that set the Carry Bit to 0: <op>ana</op> <op>ani</op> <op>ora</op> <op>ori</op> <op>xra</op> <op>xri</op>
+
+Other operations that affect the Carry Bit: <op>dma</op> <op>cmp</op> <op>cmi</op>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+    processor.registers.S.value = 0;
+}
+`test: function(oldBlob, newBlob) {
+    //console.log((newBlob.registers.S.value & 1) === 1, oldBlob.registers.A.equals(newBlob.registers.A));
+    return (oldBlob.registers.A.value < 200 ? (newBlob.registers.S.value & i8080.flagMasks.carry) : !(newBlob.registers.S.value & i8080.flagMasks.carry));
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            S: new int8(oldBlob.registers.A.value < 200 ? i8080.flagMasks.carry : 0)
+        }
+    };
+}
+`diff: Challenge.statusDiff
+```
+`name: zero
+`title: Zero Bit
+`category: bootcamp
+`requires: addsub
+`unlocks: zeroBit
+`tests: 256
+`registers: A,S
+`desc: Set the Zero Bit to 1. You may assume that it is set to 0 initially, and that <b>A</b> will hold a random value.
+
+The Zero Bit is bit 6 of the Status Register <b>S</b>, and is set according to the result of the previous operation.
+
+The Zero Bit will be set to 1 if an operations results in a value of 0, and will be set to 0 otherwise.
+
+Operations that affect the Zero Bit: <op>inr</op> <op>dcr</op> <op>dma</op> <op>add</op> <op>adi</op> <op>adc</op> <op>aci</op> <op>sub</op> <op>sui</op> <op>sbb</op> <op>sbi</op> <op>ana</op> <op>ani</op> <op>ora</op> <op>ori</op> <op>xra</op> <op>xri</op> <op>cmp</op> <op>cmi</op> 
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+}
+`test: function(oldBlob, newBlob) {
+    return (newBlob.registers.S & i8080.flagMasks.zero);
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            S: new int8(i8080.flagMasks.zero)
+        }
+    };
+}
+`diff: Challenge.statusDiff
+```
+`name: sign
+`title: Sign Bit
+`category: bootcamp
+`requires: addsub
+`unlocks: signBit
+`tests: 256
+`registers: A,S
+`desc: Compliment the Sign Bit (set it to 0 if it is 1, and set it to 1 if it is 0).
+
+The Sign Bit is bit 7 (most significant) of the Status Register <b>S</b>, and is set according to the result of the previous operation.
+
+The Sign Bit is set to 1 if the result of the previous operation is negative according to <a target="_blank" href="https://en.wikipedia.org/wiki/Two%27s_complement">Two's Compliment</a> arithmetic, and set to 0 otherwise.
+
+As such, the Sign Bit can also be seen as representing bit 7 of the previous operation, as bit 7 being set indicates a negative number in Two's Compliment arithmetic for 8-bit numbers.
+
+Building upon this, it can be said that the range of numbers from 128 through 255 (representing -128 through -1) will set the Sign Bit to 1, with 0-127 setting it to 0.
+
+The following operations affect the Sign Bit: <op>inr</op> <op>dcr</op> <op>dma</op> <op>add</op> <op>adi</op> <op>adc</op> <op>aci</op> <op>sub</op> <op>sui</op> <op>sbb</op> <op>sbi</op> <op>ana</op> <op>ani</op> <op>ora</op> <op>ori</op> <op>xra</op> <op>xri</op> <op>cmp</op> <op>cmi</op>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+    processor.setZSP(processor.registers.A);
+}
+`test: function(oldBlob, newBlob) {
+    return (oldBlob.registers.S.value & i8080.flagMasks.sign) ^ (newBlob.registers.S.value & i8080.flagMasks.sign);
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            S: new int8((oldBlob.registers.S & i8080.flagMasks.sign) ^ i8080.flagMasks.sign)
+        }
+    };
+}
+`diff: Challenge.statusDiff
+```
+`name: parity
+`title: Parity Bit
+`category: bootcamp
+`requires: addsub,bitwise
+`unlocks: parityBit
+`tests: 256
+`registers: A,S
+`desc: Compliment the Parity Bit.
+
+The Parity Bit is bit 2 of the Status Register <b>S</b>, and is set according the result of the previous operation.
+
+The Parity Bit is set according to a number's <i>bit parity</i>.
+
+Bit parity is determined by counting up the number of bits in a number that are equal to 1, and determining whether that number is odd or even.
+
+For example, the number 01101010B (106) has 4 bits set to 1, and since 4 is even, it is said to have <i>even</i> bit parity.
+11101010B (234) has 5 bits set to 1, however, so it is said to have <i>odd</i> bit parity.
+
+The Parity Bit will be set to 1 if the result of the previous operation has even bit parity, and 0 for odd.
+
+Operations that affect the Parity Bit: <op>inr</op> <op>dcr</op> <op>dma</op> <op>add</op> <op>adi</op> <op>adc</op> <op>aci</op> <op>sub</op> <op>sui</op> <op>sbb</op> <op>sbi</op> <op>ana</op> <op>ani</op> <op>ora</op> <op>ori</op> <op>xra</op> <op>xri</op> <op>cmp</op> <op>cmi</op>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = i;
+    processor.setZSP(processor.registers.A);
+}
+`test: function(oldBlob, newBlob) {
+    return (oldBlob.registers.S.value & i8080.flagMasks.parity) ^ (newBlob.registers.S.value & i8080.flagMasks.parity);
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: null,
+            S: new int8((oldBlob.registers.S & i8080.flagMasks.parity) ^ i8080.flagMasks.parity)
+        }
+    };
+}
+`diff: Challenge.statusDiffWithReg
+```
+`name: jmp
+`title: Labels and Jumping
+`category: bootcamp
+`requires: tutorial,addsub,carryBit,zeroBit,parityBit,signBit
+`unlocks: jmp,mult
+`tests: 10000
+`registers: A,B,C
+`desc: Set the value of <b>A</b> to the value of <b>B</b> times the value of <b>C</b>.
+
+Recall the format for assembly instructions:
+
+<code>label: instruction arg1,arg2</code>
+
+Labels are a way to remember certain instructions/points in memory for future use, and are often used for looping.
+
+Labels can be between 1-5 characters (longer labels will be truncated to 5 characters), are NOT case sensitive (<code>LABEL</code> is the same as <code>label</code>), and must start with a either a letter A-Z, or one of the symbols @ or ?.
+
+Labels can be used as variables which contain a 16-bit value corresponding to the memory address that their line is assembled to - this allows them to be used with the <op>jmp</op> command.
+
+In order to transfer execution to the point of a label, the <op>jmp</op> instruction is used. For example, the following code will add 5 to the <b>accumulator</b> indefinitely:
+
+<code>loop: add 5
+jmp loop</code>
+
+This, of course, isn't very useful. That's why there exist <i>conditional jump instructions</i>. Conditional jump instructions first check the value of a status bit, and depending on that value, either performs a jump operation or does nothing.
+
+The conditional jump instructions are as follows:
+
+<table class='myAwesomeTable'><tr><th>Status Bit</th><th>Jumps if 1</th><th>Jumps if 0</th></tr><tr><td>Zero</td><td><op>jz</op></td><td><op>jnz</op></td></tr><tr><td>Carry</td><td><op>jc</op></td><td><op>jnc</op></td></tr><tr><td>Parity</td><td><op>jpe</op></td><td><op>jpo</op></td></tr><tr><td>Sign</td><td><op>jm</op></td><td><op>jp</op></td></tr></table>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.B.value = ~~(Math.random() * 256);
+    processor.registers.C.value = ~~(Math.random() * 256);
+}
+`test: function(oldBlob, newBlob) {
+    var or = oldBlob.registers;
+    return newBlob.registers.A.equals(or.B.times(or.C));
+}
+`getExpected: function(oldBlob) {
+    var or = oldBlob.registers;
+    return {
+        registers: {
+            A: or.B.times(or.C)
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: regpair
+`title: Register Pairs
+`category: bootcamp
+`requires: addsub
+`unlocks: regpair
+`tests: 10000
+`registers: all
+`desc: Set the value of <b>DE</b> to the value of <b>BC</b> + 20.
+
+Register Pairs are formed by combining two 8-bit registers into one 16-bit register.
+
+The value of a Register Pair is formed by concatenating the first register's bits with the second's.
+
+For example, if <b>B</b> has a value of 0x5A and <b>C</b> has a value of 0x73, <b>BC</b> will have a value of 0x5A73.
+
+Operating upon a register that is a part of a Register Pair will affect that Register Pair's value, and vice versa.
+
+There exist 4 Register Pairs and 2 registers that sometimes act as Register Pairs, and those are as follows:
+
+<u>Register Pairs</u>
+<b>BC</b> - Register Pair made up of <b>B</b> and <b>C</b>.
+<b>DE</b> - Register Pair made up of <b>D</b> and <b>E</b>.
+<b>HL</b> - Register Pair made up of <b>H</b> and <b>L</b> - used as a default Register Pair by some instructions.
+<b>PSW</b> - Register Pair made up of <b>S</b> and <b>A</b> - useful for storing/recalling the state of the processor using the stack.
+
+<u>Other 16-bit Registers</u>
+<b>PC</b> - The Program Counter, which stores and controls the memory address of the instruction being currenetly executed.
+<b>SP</b> - The Stack Pointer, which stores and controls the root address of the stack.
+
+The instructions that operate specifically on/with Register Pairs are as follows:
+
+<op>stax</op> <op>ldax</op> <op>push</op> <op>pop</op> <op>lxi</op> <op>dad</op> <op>inx</op> <op>dcx</op> <op>xchg</op> <op>xthl</op> <op>shld</op> <op>lhld</op> <op>pchl</op> <op>sphl</op>
+
+<b>(Note that Register Pairs BC, DE, and HL are to be referred to as B, D, and H when used as an argument for an instruction.)</b>
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.BC.value = ~~(Math.random() * 256 * 256);
+    processor.registers.DE.value = ~~(Math.random() * 256 * 256);
+}
+`test: function(oldBlob, newBlob) {
+    var or = oldBlob.registers;
+    return newBlob.registers.DE.equals(or.BC.plus(20));
+}
+`getExpected: function(oldBlob) {
+    var or = oldBlob.registers;
+    return {
+        registers: {
+            DE: or.BC.plus(20)
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: screen
+`title: Screen - Checkerboard
+`category: devices
+`requires: iodevices
+`unlocks: screen
+`tests: 1
+`registers: all
+`desc: Output a checkerboard design on the screen, starting with a black square.
+
+The screen device is a 9x9 monochrome screen, and accepts input as a series of two bytes - the first byte will indicate the 0-based index of the pixel to be operated upon, and the second byte will determine the operation. A second byte containing the value 0 will turn the pixel off, whereas any other value with turn the pixel on.
+`invoke: function() {
+    var d = new IO_Screen(processor, 9, 9);
+    setDevice(d);
+    processor.setDevice(0, d);
+}
+`setup: function(processor, i) {
+    currentDevice.reset();
+}
+`test: function(oldBlob, newBlob) {
+    return array_compare(currentDevice.array, [
+        1, 0, 1, 0, 1, 0, 1, 0, 1,
+        0, 1, 0, 1, 0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1, 0, 1, 0, 1,
+        0, 1, 0, 1, 0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1, 0, 1, 0, 1,
+        0, 1, 0, 1, 0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1, 0, 1, 0, 1,
+        0, 1, 0, 1, 0, 1, 0, 1, 0,
+        1, 0, 1, 0, 1, 0, 1, 0, 1
+    ]);
+}
+`getExpected: function(oldBlob) {
+    return {
+        array: [
+            1, 0, 1, 0, 1, 0, 1, 0, 1,
+            0, 1, 0, 1, 0, 1, 0, 1, 0,
+            1, 0, 1, 0, 1, 0, 1, 0, 1,
+            0, 1, 0, 1, 0, 1, 0, 1, 0,
+            1, 0, 1, 0, 1, 0, 1, 0, 1,
+            0, 1, 0, 1, 0, 1, 0, 1, 0,
+            1, 0, 1, 0, 1, 0, 1, 0, 1,
+            0, 1, 0, 1, 0, 1, 0, 1, 0,
+            1, 0, 1, 0, 1, 0, 1, 0, 1
+        ]
+    };
+}
+`diff: function(diffWidget, oldBlob, expectedBlob) {
+    var d = new IO_Screen(processor);
+    d.setArray(expectedBlob.array);
+
+    diffWidget.appendWidget("Expected Device", new WrapperWidget(d.$element));
+    var $c = currentDevice.$element.cloneNode(true);
+    $c.childNodes[0].getContext("2d").drawImage(currentDevice.$canvas, 0, 0);
+    diffWidget.appendWidget("Your Device", new WrapperWidget($c));
+}
+```
+`name: screenReverse
+`title: Screen - Mirror
+`category: devices
+`requires: screen
+`unlocks: screenReverse
+`tests: 100
+`registers: all
+`desc: Mirror the screen horizontally. The screen is device 0.
+
+In addition to writing pixels to the screen, you may read pixels. This can be done by sending the screen the index on which to operate, then using the <op>in</op> command to read a byte from the screen. A 0 read from the screen will indicate that the pixel is not turned on, whereas any other value will indicate that the pixel is turned on.
+
+Requesting a pixel in this fashion will reset the screen's input state in the same way that writing a pixel does, so the next thing you will have to do will always be to select an index.
+`invoke: function() {
+    var d = new IO_Screen(processor, 9, 9);
+    setDevice(d);
+    processor.setDevice(0, d);
+}
+`setup: function(processor, i) {
+    currentDevice.reset();
+    var arr = [];
+    for (var i = 0; i < 81; i++) {
+        arr.push(pick1(0, 1));
+    }
+
+    currentDevice.setArray(arr);
+    currentDevice.ogArray = array_copy(arr);
+}
+`test: function(oldBlob, newBlob) {
+    return array_compare(currentDevice.array, array_mirror_h(array_copy(currentDevice.ogArray), currentDevice.resX));
+}
+`getExpected: function(oldBlob) {
+    return {
+        array: array_mirror_h(array_copy(currentDevice.ogArray), currentDevice.resX)
+    };
+}
+`diff: function(diffWidget, oldBlob, expectedBlob) {
+    var d = new IO_Screen(processor);
+    var $c;
+
+    d.setArray(currentDevice.ogArray);
+    $c = d.$element.cloneNode(true);
+    $c.childNodes[0].getContext("2d").drawImage(d.$canvas, 0, 0);
+    diffWidget.appendWidget("Input Device", new WrapperWidget($c));
+
+    d.setArray(expectedBlob.array);
+    $c = d.$element.cloneNode(true);
+    $c.childNodes[0].getContext("2d").drawImage(d.$canvas, 0, 0);
+    diffWidget.appendWidget("Expected Device", new WrapperWidget($c));
+
+    $c = currentDevice.$element.cloneNode(true);
+    $c.childNodes[0].getContext("2d").drawImage(currentDevice.$canvas, 0, 0);
+    diffWidget.appendWidget("Your Device", new WrapperWidget($c));
+}
+```
+`name: sqrt
+`title: Square Root
+`category: math
+`requires: addsub
+`unlocks: sqrt
+`tests: 1000
+`registers: all
+`desc: Set the value of <b>A</b> to the square root of itself (rounded down). You may assume that <b>A</b> will hold a random value.
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.A.value = int8.random().value;
+}
+`test: function(oldBlob, newBlob) {
+    return ~~Math.sqrt(oldBlob.registers.A.value) === newBlob.registers.A.value;
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: new int8(Math.sqrt(oldBlob.registers.A.value))
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: gcd
+`title: GCD
+`category: math
+`requires: addsub
+`unlocks: gcd
+`tests: 1000
+`registers: all
+`desc: Set the value of <b>A</b> to the Greatest Common Denominator (GCD) of the values of <b>B</b> and <b>C</b>.
+
+The GCD is the largest number that evenly divides the two numbers (e.g. 2 is the greatest number that evenly goes into 4 and 6, so 2 is the GCD of 4 and 6.)
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.B.value = int8.random().value;
+    processor.registers.C.value = int8.random().value;
+}
+`test: function(oldBlob, newBlob) {
+    return gcd(oldBlob.registers.B.value, oldBlob.registers.C.value) === newBlob.registers.A.value;
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: new int8(gcd(oldBlob.registers.B.value, oldBlob.registers.C.value))
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: prime
+`title: Prime Test
+`category: math
+`requires: addsub,regpair
+`unlocks: prime
+`tests: 65536
+`registers: all
+`desc: Set the value of <b>A</b> to <code>1</code> if the value stored in <b>BC</b> is prime. Set the value of <b>A</b> to <code>0</code> otherwise.
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.BC.value = i;
+}
+`test: function(oldBlob, newBlob) {
+    return newBlob.registers.A.value === +isPrime(oldBlob.registers.BC.value);
+}
+`getExpected: function(oldBlob) {
+    return {
+        registers: {
+            A: new int8(isPrime(oldBlob.registers.BC.value))
+        }
+    };
+}
+`diff: Challenge.regDiff
+```
+`name: memreg
+`title: Memory Register
+`category: bootcamp
+`requires: regpair
+`unlocks: memreg
+`tests: 65536
+`registers: all
+`desc: Add 5 to the value stored in memory at the location specified by <b>HL</b>, then set the memory location immediately following that to double the value.
+
+e.g. If the value at the memory address specified by the value of <b>HL</b> was 7, the value at the memory address specified by the value of HL plus one should be set to <code>(7 + 5) * 2 = 24</code>.
+
+The Memory Register <b>M</b> is a special register in that its value is NOT independent from memory.
+
+Operating upon the <b>M</b> register will affect the value stored in memory at the location specified by the value of <b>HL</b>.
+
+For example, if the value at memory address 200 was 8, in order to increment this value to 9, one could set the value of <b>HL</b> to 200 and pass <b>M</b> as the argument for the <op>inr</op> instruction.
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+    processor.registers.HL.value = randomInt(5000,8000);
+    processor.memory.setByte(processor.registers.HL.value, int8.random());
+    this.root = this.newRoot = processor.registers.HL.value;
+}
+`test: function(oldBlob, newBlob) {
+    var om = oldBlob.memoryBlob;
+    var nm = newBlob.memoryBlob;
+    var i = oldBlob.registers.HL.value;
+
+    //console.log(om, nm);
+
+    return (nm[i] !== undefined) && (nm[i + 1] !== undefined) && (om[i] !== undefined)
+        && ((coerceInt(nm[i]) & 0xff) === ((coerceInt(om[i]) + 5) & 0xff))
+        && ((coerceInt(nm[i + 1]) & 0xff) === ((2 * (coerceInt(om[i]) + 5)) & 0xff));
+}
+`getExpected: function(oldBlob) {
+    var om = oldBlob.memoryBlob;
+    var i = oldBlob.registers.HL.value;
+
+    var ret = {
+        memoryBlob: []
+    };
+
+    ret.memoryBlob[i] = new int8(coerceInt(om[i]) + 5);
+    ret.memoryBlob[i + 1] = new int8((coerceInt(om[i]) + 5) * 2);
+    
+    return ret;
+}
+`diff: Challenge.memDiff
+```

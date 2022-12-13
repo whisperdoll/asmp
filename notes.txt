@@ -1,0 +1,85 @@
+todo
+--
+-better arg tooltip
+-remember working solutions
+-bgs and stuff
+
+challengeStatusObject = {
+    unlocked: [],
+
+}
+
+
+
+Storage.set("challengeStatus", challengeStatusObject);
+
+idea for challenges
+--
+different pages, devoted
+to different characters
+that want you to make
+stuff for them, and usually
+themed, like one will have
+to do with a screen device,
+one will have to do with just
+like math or something, one
+will have to do with text,
+and you can even combine some!
+wow, first page is BOOTCAMP
+but you start to unlock other
+as you go thru bootcamp so its
+not a slog. use what you know
+at any given point.
+
+BOOTCAMP
+non regpair
+ds
+nop
+cmc
+stc
+inr
+dcr
+cma
+dma
+mov
+mvi
+add
+adi
+adc
+aci
+etc
+cmp
+rot
+sta
+lda
+jmp
+call
+io
+if
+status
+
+regpairs
+memreg
+
+`name: 
+`title: 
+`category: 
+`requires: 
+`unlocks: 
+`tests: 
+`registers: 
+`desc: 
+`invoke: function() {
+
+}
+`setup: function(processor, i) {
+
+}
+`test: function(oldBlob, newBlob) {
+
+}
+`getExpected: function(oldBlob) {
+
+}
+`diff: Challenge.regDiff
+```

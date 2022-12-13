@@ -1,0 +1,117 @@
+.deviceContainerWidget {
+  flex:0 1 220px !important;
+  width:100%;
+  background:#aaa;
+  box-sizing:border-box;
+  /*! column-count: 2; */
+  display:flex;
+  flex-direction:column;
+  flex-wrap:wrap;
+  min-height:220px;
+  max-height:220px;
+}
+
+.deviceContainerWidget-inner {
+  width:100%;
+  height:100%;
+  position:relative;
+  display:flex;
+  flex-wrap:wrap;
+  flex-direction:column;
+  align-content:left;
+}
+
+.device {
+  position:relative;
+  background:white;
+  z-index:100;
+  width:180px;
+  height:180px;
+  box-sizing:border-box;
+}
+
+.deviceContainerWidget-reset {
+  height:40px;
+  width:180px;
+  background: #ddd;
+  color: #111;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  position:relative;
+}
+
+.sumRequester {
+  border-left:1px solid white;
+  background:#111;
+  color:white;
+  padding:8px;
+  min-height:48px;
+}
+
+.sumRequester-sum {
+  color:yellow;
+  position:absolute;
+  bottom:8px;
+}
+
+.screen {
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
+  background:rgba(141,131,141,1);
+  border:1px solid black;
+  border-radius:0px;
+}
+
+.screen-canvas {
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  width:171px;
+  height:171px;
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
+  image-rendering:optimizespeed;
+  background-color:#9bbc0f;
+  border:1px solid black;
+  border-radius:3px;
+}
+
+.touchpad {
+  background:#ddd;
+  border:1px solid #aaa;
+}
+
+.touchpad-inner {
+  width:calc(100% - 16px);
+  height:calc(100% - 16px);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  background:#bbb;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.touchpad-inner-active {
+  background:#aaa;
+}
+
+.io-light {
+  background:#888;
+  border:1px solid #222;
+}
+
+.io-light-inner {
+  width:50%;
+  height:50%;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  background:#222;
+  border-radius:700px;
+}
